@@ -28,14 +28,9 @@ public class Options : MonoBehaviour
     {
         GameObject texture = GameObject.Find("Pixels(Clone)");
         GameObject startPauseButton = GameObject.Find("Start/Pause (TMP)");
-        if (texture.GetComponent<Texture>().enabled)
-        {
-            startPauseButton.GetComponent<TMP_Text>().text = "Pause";
-        }
-        else
-        {
-            startPauseButton.GetComponent<TMP_Text>().text = "Start";
-        }
+        if (texture.GetComponent<Texture>().enabled) startPauseButton.GetComponent<TMP_Text>().text = "Pause";
+        else startPauseButton.GetComponent<TMP_Text>().text = "Start";
+
     }
 
     /*public void StartPixels() {
