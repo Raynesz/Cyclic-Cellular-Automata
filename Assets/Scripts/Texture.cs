@@ -127,16 +127,8 @@ public class Texture : MonoBehaviour
 
     private void SetupColors()
     {
-        /*colorPalette.Add(new Color32(255, 0, 0, 255));
-        colorPalette.Add(new Color32(255, 153, 0, 255));
-        colorPalette.Add(new Color32(255, 255, 0, 255));
-        colorPalette.Add(new Color32(0, 255, 0, 255));
-        colorPalette.Add(new Color32(0, 0, 255, 255));
-        colorPalette.Add(new Color32(63, 0, 255, 255));
-        colorPalette.Add(new Color32(127, 0, 255, 255));*/
         GameObject optionsCanvas = GameObject.Find("Options Canvas");
         colorNumber = optionsCanvas.GetComponent<Options>().output;
-        //Debug.Log(colorNumber);
         if (colorNumber == 18) colorPalette = new List<Color32>{
             new Color32(181, 0, 0, 255), //dark red
             new Color32(255, 0, 0, 255), //red

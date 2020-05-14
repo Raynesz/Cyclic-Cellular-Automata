@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PixelsCanvas : MonoBehaviour
 {
+    public GameObject pixelsCanvas;
     public GameObject pixelsPrefab;
     private GameObject pixels;
 
@@ -14,9 +15,8 @@ public class PixelsCanvas : MonoBehaviour
     }
 
     public void CreatePixels() {
-        GameObject PixelsCanvas = GameObject.Find("Pixels Canvas");
         pixels = Instantiate(pixelsPrefab);
-        pixels.transform.SetParent(PixelsCanvas.transform);
+        pixels.transform.SetParent(pixelsCanvas.transform);
         pixels.GetComponent<RectTransform>().offsetMin = new Vector2(500, 0);
         pixels.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
     }

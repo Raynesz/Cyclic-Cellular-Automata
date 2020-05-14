@@ -339,7 +339,7 @@ RectTransform:
   m_Children:
   - {fileID: 1907368488}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -358,6 +358,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc9b6be496b77654e9385fb3e5d23832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startPauseTMP: {fileID: 864141673}
   output: 18
 --- !u!1 &298971562
 GameObject:
@@ -1414,7 +1415,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &961965258
 GameObject:
@@ -1797,6 +1798,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e5e93fecb8aca641aaec52c79694392, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pixelsCanvas: {fileID: 1134462285}
   pixelsPrefab: {fileID: 2714907210620813230, guid: 14bb56b5aaeb6a9409ebd9b3a8c884bb,
     type: 3}
 --- !u!1 &1157807638
