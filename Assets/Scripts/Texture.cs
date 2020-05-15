@@ -8,13 +8,16 @@ public class Texture : MonoBehaviour
     private int nh;
     private int colorNumber;
     private List<Color32> colorPalette = new List<Color32>();
-    private int[,] pixelArray = new int[1420, 1080];
+    private static int textureWidth = 1420;
+    private static int textureHeight = 1080;
+    private int[,] pixelArray = new int[textureWidth, textureHeight];
 
     // Start is called before the first frame update
     void Start()
     {
         GameObject optionsCanvas = GameObject.Find("Options Canvas");
         nh = optionsCanvas.GetComponent<Options>().nhoutput;
+        colorNumber = optionsCanvas.GetComponent<Options>().colorsoutput;
         SetupColors();
         RandomizeTexture();
         GetComponent<Texture>().enabled = false;
@@ -27,9 +30,9 @@ public class Texture : MonoBehaviour
         int successorIndex;
         bool eval;
 
-        for (int x = 1; x < 1419; x++)
+        for (int x = 1; x < textureWidth-1; x++)
         {
-            for (int y = 1; y < 1079; y++)
+            for (int y = 1; y < textureHeight-1; y++)
             {
                 if (pixelArray[x, y] == colorNumber - 1) successorIndex = 0;
                 else successorIndex = pixelArray[x, y] + 1;
@@ -107,7 +110,7 @@ public class Texture : MonoBehaviour
 
     private void RandomizeTexture()
     {
-        Texture2D texture = new Texture2D(1420, 1080);
+        Texture2D texture = new Texture2D(textureWidth, textureHeight);
         GetComponent<RawImage>().material.mainTexture = texture;
         int colorIndex;
         Color color;
@@ -118,10 +121,10 @@ public class Texture : MonoBehaviour
         {
             for (int y = 0; y < texture.height; y++)
             {
-                if (x == 0 || y == 0 || x == 1419 || y == 1079)
+                if (x == 0 || y == 0 || x == textureWidth-1 || y == textureHeight-1)
                 {
                     colorIndex = -1;
-                    color = new Color32(0, 0, 0, 255);
+                    color = new Color32(0, 255, 0, 255);
                 }
                 else
                 {
@@ -137,8 +140,6 @@ public class Texture : MonoBehaviour
 
     private void SetupColors()
     {
-        GameObject optionsCanvas = GameObject.Find("Options Canvas");
-        colorNumber = optionsCanvas.GetComponent<Options>().colorsoutput;
         switch (colorNumber) {
             case 18: 
                 colorPalette = new List<Color32>{

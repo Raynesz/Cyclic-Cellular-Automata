@@ -6,7 +6,6 @@ public class PixelsCanvas : MonoBehaviour
 {
     public GameObject pixelsCanvas;
     public GameObject pixelsPrefab;
-    public bool shouldReset;
     private GameObject pixels;
 
     // Start is called before the first frame update
@@ -18,9 +17,9 @@ public class PixelsCanvas : MonoBehaviour
     public void CreatePixels()
     {
         pixels = Instantiate(pixelsPrefab);
-        pixels.transform.SetParent(pixelsCanvas.transform);
-        pixels.GetComponent<RectTransform>().offsetMin = new Vector2(500, 0);
-        pixels.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
+        pixels.transform.SetParent(pixelsCanvas.transform, false);
+        //pixels.GetComponent<RectTransform>().offsetMin = new Vector2(500, 0);
+        //pixels.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
     }
 
     public void DestroyPixels()

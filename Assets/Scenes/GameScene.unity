@@ -1932,7 +1932,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1970,7 +1970,6 @@ MonoBehaviour:
   pixelsCanvas: {fileID: 1134462285}
   pixelsPrefab: {fileID: 2714907210620813230, guid: 14bb56b5aaeb6a9409ebd9b3a8c884bb,
     type: 3}
-  shouldReset: 0
 --- !u!1 &1157807638
 GameObject:
   m_ObjectHideFlags: 0
