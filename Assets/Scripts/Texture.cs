@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Texture : MonoBehaviour
 {
+    private int nh;
     private int colorNumber;
     private List<Color32> colorPalette = new List<Color32>();
     private int[,] pixelArray = new int[1420, 1080];
@@ -12,6 +13,8 @@ public class Texture : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameObject optionsCanvas = GameObject.Find("Options Canvas");
+        nh = optionsCanvas.GetComponent<Options>().nhoutput;
         SetupColors();
         RandomizeTexture();
         GetComponent<Texture>().enabled = false;
@@ -22,6 +25,7 @@ public class Texture : MonoBehaviour
     {
         Texture2D texture = GetComponent<RawImage>().material.mainTexture as Texture2D;
         int successorIndex;
+        bool eval;
 
         for (int x = 1; x < 1419; x++)
         {
@@ -30,8 +34,11 @@ public class Texture : MonoBehaviour
                 if (pixelArray[x, y] == colorNumber - 1) successorIndex = 0;
                 else successorIndex = pixelArray[x, y] + 1;
 
-                if (vonNeumann(x, y, successorIndex, 1))
-                //if (Moore(1, x, y))
+                if (nh == 0) eval = vonNeumann(x, y, successorIndex, 1);
+                else eval = Moore(x, y, successorIndex, 1);
+                
+                if (eval)
+                //if (Moore(x, y, successorIndex, 1))
                 //if (true)
                 {
                     pixelArray[x, y] = successorIndex;
@@ -58,7 +65,7 @@ public class Texture : MonoBehaviour
 
     private bool Moore(int x, int y, int successorIndex, int thold)
     {
-        int count = 0;
+        //int count = 0;
         int left = -1, bottom = -1;
         int right = 1, top = 1;
 
@@ -88,13 +95,14 @@ public class Texture : MonoBehaviour
             {
                 if (i != j)
                 {
-                    if (pixelArray[x, y] == colorNumber - 1) { if (pixelArray[x + i, y + j] == 0) count++; }
-                    else { if (pixelArray[x + i, y + j] == (pixelArray[x, y] + 1)) count++; }
+                    if (pixelArray[x, y] == colorNumber - 1) { if (pixelArray[x + i, y + j] == 0) return true; }
+                    else { if (pixelArray[x + i, y + j] == (pixelArray[x, y] + 1)) return true; }
                 }
             }
         }
-        if (count >= thold) return true;
-        else return false;
+        //if (count >= thold) return true;
+        //else return false;
+        return false;
     }
 
     private void RandomizeTexture()
@@ -103,6 +111,8 @@ public class Texture : MonoBehaviour
         GetComponent<RawImage>().material.mainTexture = texture;
         int colorIndex;
         Color color;
+
+        Random.InitState(System.DateTime.Now.Second);
 
         for (int x = 0; x < texture.width; x++)
         {
@@ -128,48 +138,246 @@ public class Texture : MonoBehaviour
     private void SetupColors()
     {
         GameObject optionsCanvas = GameObject.Find("Options Canvas");
-        colorNumber = optionsCanvas.GetComponent<Options>().output;
-        if (colorNumber == 18) colorPalette = new List<Color32>{
-            new Color32(181, 0, 0, 255), //dark red
-            new Color32(255, 0, 0, 255), //red
-            new Color32(211, 46, 0, 255), //red - orange
-            new Color32(255, 153, 0, 255), //orange
-            new Color32(250, 180, 0, 255), //orange - yellow
-            new Color32(255, 255, 0, 255), //yellow
-            new Color32(185, 255, 0, 255), //yellow green
-            new Color32(0, 255, 0, 255), //green
-            new Color32(0, 157, 0, 255), //dark green
-            new Color32(0, 254, 0, 107), //dark blue green
-            new Color32(0, 157, 99, 255), //bright green blue
-            new Color32(0, 255, 255, 255), //bright blue
-            new Color32(0, 0, 255, 255), //blue
-            new Color32(0, 0, 136, 255), //dark blue
-            new Color32(63, 0, 255, 255), //indigo
-            new Color32(127, 0, 255, 255), //violet
-            new Color32(216, 0, 255, 255), //mauve
-            new Color32(255, 0, 181, 255) //pink
-            };
-        else if (colorNumber == 12) colorPalette = new List<Color32>{
-            new Color32(255, 0, 0, 255), //red
-            new Color32(211, 46, 0, 255), //red - orange
-            new Color32(255, 153, 0, 255), //orange
-            new Color32(250, 180, 0, 255), //orange - yellow
-            new Color32(255, 255, 0, 255), //yellow
-            new Color32(185, 255, 0, 255), //yellow green
-            new Color32(0, 255, 0, 255), //green
-            new Color32(0, 255, 255, 255), //bright blue
-            new Color32(0, 0, 255, 255), //blue
-            new Color32(63, 0, 255, 255), //indigo
-            new Color32(127, 0, 255, 255), //violet
-            new Color32(255, 0, 181, 255) //pink
-            };
-        else colorPalette = new List<Color32>{
-            new Color32(255, 0, 0, 255), //red
-            new Color32(255, 153, 0, 255), //orange
-            new Color32(255, 255, 0, 255), //yellow
-            new Color32(0, 255, 0, 255), //green
-            new Color32(0, 0, 255, 255), //blue
-            new Color32(127, 0, 255, 255) //violet
-            };
+        colorNumber = optionsCanvas.GetComponent<Options>().colorsoutput;
+        switch (colorNumber) {
+            case 18: 
+                colorPalette = new List<Color32>{
+                new Color32(181, 0, 0, 255), //dark red
+                new Color32(255, 0, 0, 255), //red
+                new Color32(211, 46, 0, 255), //red - orange
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(250, 180, 0, 255), //orange - yellow
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(185, 255, 0, 255), //yellow green
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 157, 0, 255), //dark green
+                new Color32(0, 254, 0, 107), //dark blue green
+                new Color32(0, 157, 99, 255), //bright green blue
+                new Color32(0, 255, 255, 255), //bright blue
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(0, 0, 136, 255), //dark blue
+                new Color32(63, 0, 255, 255), //indigo
+                new Color32(127, 0, 255, 255), //violet
+                new Color32(216, 0, 255, 255), //mauve
+                new Color32(255, 0, 181, 255) //pink
+                };
+                break;
+            case 17: 
+                colorPalette = new List<Color32>{
+                new Color32(181, 0, 0, 255), //dark red
+                new Color32(255, 0, 0, 255), //red
+                new Color32(211, 46, 0, 255), //red - orange
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(250, 180, 0, 255), //orange - yellow
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(185, 255, 0, 255), //yellow green
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 254, 0, 107), //dark blue green
+                new Color32(0, 157, 99, 255), //bright green blue
+                new Color32(0, 255, 255, 255), //bright blue
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(0, 0, 136, 255), //dark blue
+                new Color32(63, 0, 255, 255), //indigo
+                new Color32(127, 0, 255, 255), //violet
+                new Color32(216, 0, 255, 255), //mauve
+                new Color32(255, 0, 181, 255) //pink
+                };
+                break;
+            case 16: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(211, 46, 0, 255), //red - orange
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(250, 180, 0, 255), //orange - yellow
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(185, 255, 0, 255), //yellow green
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 254, 0, 107), //dark blue green
+                new Color32(0, 157, 99, 255), //bright green blue
+                new Color32(0, 255, 255, 255), //bright blue
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(0, 0, 136, 255), //dark blue
+                new Color32(63, 0, 255, 255), //indigo
+                new Color32(127, 0, 255, 255), //violet
+                new Color32(216, 0, 255, 255), //mauve
+                new Color32(255, 0, 181, 255) //pink
+                };
+                break;
+            case 15: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(211, 46, 0, 255), //red - orange
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(250, 180, 0, 255), //orange - yellow
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(185, 255, 0, 255), //yellow green
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 254, 0, 107), //dark blue green
+                new Color32(0, 157, 99, 255), //bright green blue
+                new Color32(0, 255, 255, 255), //bright blue
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(0, 0, 136, 255), //dark blue
+                new Color32(63, 0, 255, 255), //indigo
+                new Color32(127, 0, 255, 255), //violet
+                new Color32(255, 0, 181, 255) //pink
+                };
+                break;
+            case 14: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(211, 46, 0, 255), //red - orange
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(250, 180, 0, 255), //orange - yellow
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(185, 255, 0, 255), //yellow green
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 157, 99, 255), //bright green blue
+                new Color32(0, 255, 255, 255), //bright blue
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(0, 0, 136, 255), //dark blue
+                new Color32(63, 0, 255, 255), //indigo
+                new Color32(127, 0, 255, 255), //violet
+                new Color32(255, 0, 181, 255) //pink
+                };
+                break;
+            case 13: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(211, 46, 0, 255), //red - orange
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(250, 180, 0, 255), //orange - yellow
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(185, 255, 0, 255), //yellow green
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 255, 255, 255), //bright blue
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(0, 0, 136, 255), //dark blue
+                new Color32(63, 0, 255, 255), //indigo
+                new Color32(127, 0, 255, 255), //violet
+                new Color32(255, 0, 181, 255) //pink
+                };
+                break;
+            case 12: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(211, 46, 0, 255), //red - orange
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(250, 180, 0, 255), //orange - yellow
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(185, 255, 0, 255), //yellow green
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 255, 255, 255), //bright blue
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(63, 0, 255, 255), //indigo
+                new Color32(127, 0, 255, 255), //violet
+                new Color32(255, 0, 181, 255) //pink
+                };
+                break;
+            case 11: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(211, 46, 0, 255), //red - orange
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(250, 180, 0, 255), //orange - yellow
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(185, 255, 0, 255), //yellow green
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(63, 0, 255, 255), //indigo
+                new Color32(127, 0, 255, 255), //violet
+                new Color32(255, 0, 181, 255) //pink
+                };
+                break;
+            case 10: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(211, 46, 0, 255), //red - orange
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(250, 180, 0, 255), //orange - yellow
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(63, 0, 255, 255), //indigo
+                new Color32(127, 0, 255, 255), //violet
+                new Color32(255, 0, 181, 255) //pink
+                };
+                break;
+            case 9: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(250, 180, 0, 255), //orange - yellow
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(63, 0, 255, 255), //indigo
+                new Color32(127, 0, 255, 255), //violet
+                new Color32(255, 0, 181, 255) //pink
+                };
+                break;
+            case 8: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(250, 180, 0, 255), //orange - yellow
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(63, 0, 255, 255), //indigo
+                new Color32(127, 0, 255, 255), //violet
+                };
+                break;
+            case 7: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(63, 0, 255, 255), //indigo
+                new Color32(127, 0, 255, 255), //violet
+                };
+                break;
+            case 6: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(127, 0, 255, 255) //violet
+                };
+                break;
+            case 5: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(255, 153, 0, 255), //orange
+                new Color32(0, 255, 0, 255), //green
+                new Color32(0, 0, 255, 255), //blue
+                new Color32(127, 0, 255, 255) //violet
+                };
+                break;
+            case 4: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(255, 255, 0, 255), //yellow
+                new Color32(0, 255, 0, 255), //green
+                new Color32(127, 0, 255, 255) //violet
+                };
+                break;
+            case 3: 
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(0, 255, 0, 255), //green
+                new Color32(127, 0, 255, 255) //violet
+                };
+                break;
+            default:
+                colorPalette = new List<Color32>{
+                new Color32(255, 0, 0, 255), //red
+                new Color32(0, 255, 0, 255), //green
+                };
+                break; 
+        }
     }
 }

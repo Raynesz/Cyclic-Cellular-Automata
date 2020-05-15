@@ -6,11 +6,11 @@ using TMPro;
 
 public class Options : MonoBehaviour
 {
-    public GameObject startPauseTMP;
-    public int output=18;
-
+    public GameObject playPauseTMP;
+    public int colorsoutput;
+    public int nhoutput=0;
     public GameObject myText;
-    public Slider mySlider;
+    public Slider colorsSlider;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,20 +23,19 @@ public class Options : MonoBehaviour
         
     }
 
-    public void HandleSlider() {
-        myText.GetComponent<TMP_Text>().text = ""+mySlider.value;
+    public void HandleColorsSlider() {
+        colorsoutput = (int)colorsSlider.value;
+        myText.GetComponent<TMP_Text>().text = ""+colorsoutput;
     }
 
-    public void HandleInputData(int val) {
-        if (val == 0) output = 18;
-        else if (val == 1) output = 12;
-        else output = 6;
+    public void HandleNHInputData(int val) {
+        nhoutput = val;
     }
 
     public void SwapButtonText()
     {
         GameObject texture = GameObject.Find("Pixels(Clone)");
-        if (texture.GetComponent<Texture>().enabled) startPauseTMP.GetComponent<TMP_Text>().text = "Pause";
-        else startPauseTMP.GetComponent<TMP_Text>().text = "Start";
+        if (texture.GetComponent<Texture>().enabled) playPauseTMP.GetComponent<TMP_Text>().text = "Pause";
+        else playPauseTMP.GetComponent<TMP_Text>().text = "Play";
     }
 }
