@@ -4,26 +4,31 @@ using UnityEngine;
 
 public class FPS : MonoBehaviour
 {
+    private float updateRateSeconds = 4.0F;
     private int frameCount = 0;
-    private double dt = 0.0;
-    public double fps = 0.0;
-    private double updateRate = 4.0;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private float dt = 0.0F;
+    public float fps = 0.0F;
 
-    // Update is called once per frame
+    /*void Update()
+    {
+        frameCount++;
+        dt += Time.unscaledDeltaTime;
+        if (dt > 1.0 / updateRateSeconds)
+        {
+            fps = frameCount / dt;
+            frameCount = 0;
+            dt -= 1.0F / updateRateSeconds;
+        }
+    }*/
     void Update()
     {
         frameCount++;
-        dt += Time.deltaTime;
-        if (dt > 1.0/updateRate)
+        dt += Time.unscaledDeltaTime;
+        if (dt > 1.0 / updateRateSeconds)
         {
-            fps = frameCount / dt ;
+            fps = 1.0f / Time.deltaTime;
             frameCount = 0;
-            dt -= 1.0/updateRate;
+            dt -= 1.0F / updateRateSeconds;
         }
     }
 }

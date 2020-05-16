@@ -36,7 +36,8 @@ public class Metrics : MonoBehaviour
         texture = GameObject.Find("Pixels(Clone)");
         steps = texture.GetComponent<Texture>().steps;
         fps = (int)fpsText.GetComponent<FPS>().fps;
+        //fps = Mathf.Round(fps * 10.0f) * 0.1f;
         stepsText.GetComponent<TMP_Text>().text = "Steps: "+steps;
-        fpsText.GetComponent<TMP_Text>().text = "FPS: "+fps;
+        fpsText.GetComponent<TMP_Text>().text = "FPS: "+ fps;
     }
 }
