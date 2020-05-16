@@ -45,10 +45,4 @@ public class PixelsCanvas : MonoBehaviour
         GameObject texture = GameObject.Find("Pixels(Clone)");
         texture.GetComponent<Texture>().enabled = false;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

@@ -5,19 +5,18 @@ using UnityEngine.UI;
 
 public class Texture : MonoBehaviour
 {
+    public int steps = 0;
     private int nh;
     private int colorNumber;
     private List<Color32> colorPalette = new List<Color32>();
     private static int textureWidth = 1420;
-    private static int textureHeight = 1080;
+    private static int textureHeight = 800;
     private int[,] pixelArray = new int[textureWidth, textureHeight];
 
     // Start is called before the first frame update
     void Start()
     {
-        GameObject optionsCanvas = GameObject.Find("Options Canvas");
-        nh = optionsCanvas.GetComponent<Options>().nhoutput;
-        colorNumber = optionsCanvas.GetComponent<Options>().colorsoutput;
+        updateParameters();
         SetupColors();
         RandomizeTexture();
         GetComponent<Texture>().enabled = false;
@@ -50,6 +49,7 @@ public class Texture : MonoBehaviour
             }
         }
         texture.Apply();
+        steps++;
     }
 
     private bool vonNeumann(int x, int y, int successorIndex, int thold)
@@ -77,7 +77,7 @@ public class Texture : MonoBehaviour
             left = 0;
         }
 
-        if (x == 1419)
+        if (x == textureWidth-1)
         {
             right = 0;
         }
@@ -87,7 +87,7 @@ public class Texture : MonoBehaviour
             bottom = 0;
         }
 
-        if (y == 1079)
+        if (y == textureHeight-1)
         {
             top = 0;
         }
@@ -124,7 +124,7 @@ public class Texture : MonoBehaviour
                 if (x < 2 || y < 2 || x > textureWidth - 3 || y > textureHeight - 3)
                 {
                     colorIndex = -1;
-                    color = new Color32(0, 0, 0, 255);
+                    color = new Color32(0, 255, 0, 255);
                 }
                 else
                 {
@@ -136,6 +136,12 @@ public class Texture : MonoBehaviour
             }
         }
         texture.Apply();
+    }
+
+    private void updateParameters() {
+        GameObject optionsCanvas = GameObject.Find("Options Canvas");
+        nh = optionsCanvas.GetComponent<Options>().nhoutput;
+        colorNumber = optionsCanvas.GetComponent<Options>().colorsoutput;
     }
 
     private void SetupColors()
