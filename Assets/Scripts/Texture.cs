@@ -12,22 +12,26 @@ public class Texture : MonoBehaviour
     private static int textureWidth = 1420;
     private static int textureHeight = 800;
     private int[,] pixelArray = new int[textureWidth, textureHeight];
+    private Texture2D texture;
+    private int successorIndex;
+    private bool eval;
 
     // Start is called before the first frame update
     void Start()
     {
-        updateParameters();
+        updateRule();
         SetupColors();
         RandomizeTexture();
+        texture = GetComponent<RawImage>().material.mainTexture as Texture2D;
         GetComponent<Texture>().enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Texture2D texture = GetComponent<RawImage>().material.mainTexture as Texture2D;
-        int successorIndex;
-        bool eval;
+        //Texture2D texture = GetComponent<RawImage>().material.mainTexture as Texture2D;
+        //int successorIndex;
+        //bool eval;
 
         for (int x = 2; x < textureWidth - 2; x++)
         {
@@ -36,8 +40,8 @@ public class Texture : MonoBehaviour
                 if (pixelArray[x, y] == colorNumber - 1) successorIndex = 0;
                 else successorIndex = pixelArray[x, y] + 1;
 
-                if (nh == 0) eval = vonNeumann(x, y, successorIndex, 1);
-                else eval = Moore(x, y, successorIndex, 1);
+                if (nh == 0) eval = vonNeumann(x, y, successorIndex, 3);
+                else eval = Moore(x, y, successorIndex, 3);
 
                 if (eval)
                 //if (Moore(x, y, successorIndex, 1))
@@ -54,53 +58,43 @@ public class Texture : MonoBehaviour
 
     private bool vonNeumann(int x, int y, int successorIndex, int thold)
     {
-        //int count = 0;
+        int count = 0;
 
-        if (pixelArray[x, y + 1] == successorIndex || pixelArray[x + 1, y] == successorIndex || pixelArray[x, y - 1] == successorIndex || pixelArray[x - 1, y] == successorIndex)
+        /*if (pixelArray[x, y + 1] == successorIndex || pixelArray[x + 1, y] == successorIndex || pixelArray[x, y - 1] == successorIndex || pixelArray[x - 1, y] == successorIndex)
         {
             return true;
         }
         else
         {
             return false;
-        }
+        }*/
+        if (pixelArray[x, y + 1] == successorIndex) count++;
+        if (pixelArray[x + 1, y] == successorIndex) count++;
+        if (pixelArray[x, y - 1] == successorIndex) count++;
+        if (pixelArray[x - 1, y] == successorIndex) count++;
+        if (count >= thold) return true;
+        else return false;
     }
 
     private bool Moore(int x, int y, int successorIndex, int thold)
     {
-        //int count = 0;
+        int count = 0;
         int left = -1, bottom = -1;
         int right = 1, top = 1;
-
-        if (x == 0)
-        {
-            left = 0;
-        }
-
-        if (x == textureWidth-1)
-        {
-            right = 0;
-        }
-
-        if (y == 0)
-        {
-            bottom = 0;
-        }
-
-        if (y == textureHeight-1)
-        {
-            top = 0;
-        }
 
         for (int i = left; i <= right; i++)
         {
             for (int j = bottom; j <= top; j++)
             {
-                if (i != j)
+                if (!(i == 0) && (j == 0))
                 {
-                    if (pixelArray[x, y] == colorNumber - 1) { if (pixelArray[x + i, y + j] == 0) return true; }
-                    else { if (pixelArray[x + i, y + j] == (pixelArray[x, y] + 1)) return true; }
+                    if (((x + i) >= 0 && (x + i) <= textureWidth - 1) && ((y + j) >= 0 && (y + j) <= textureHeight - 1))
+                    {
+                        if (pixelArray[x, y] == colorNumber - 1) { if (pixelArray[x + i, y + j] == 0) count+=1; }
+                        else { if (pixelArray[x + i, y + j] == (pixelArray[x, y] + 1)) count+=1; }
+                    }
                 }
+                if (count >= thold) return true;
             }
         }
         //if (count >= thold) return true;
@@ -124,7 +118,7 @@ public class Texture : MonoBehaviour
                 if (x < 2 || y < 2 || x > textureWidth - 3 || y > textureHeight - 3)
                 {
                     colorIndex = -1;
-                    color = new Color32(0, 255, 0, 255);
+                    color = new Color32(255, 255, 255, 255);
                 }
                 else
                 {
@@ -138,7 +132,8 @@ public class Texture : MonoBehaviour
         texture.Apply();
     }
 
-    private void updateParameters() {
+    private void updateRule()
+    {
         GameObject optionsCanvas = GameObject.Find("Options Canvas");
         nh = optionsCanvas.GetComponent<Options>().nhoutput;
         colorNumber = optionsCanvas.GetComponent<Options>().colorsoutput;

@@ -13,7 +13,7 @@ public class Metrics : MonoBehaviour
     private int colorNumber;
     private int steps;
     private string nh;
-    private int fps;
+    private float fps;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,12 +31,12 @@ public class Metrics : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         texture = GameObject.Find("Pixels(Clone)");
         steps = texture.GetComponent<Texture>().steps;
-        fps = (int)fpsText.GetComponent<FPS>().fps;
-        //fps = Mathf.Round(fps * 10.0f) * 0.1f;
+        fps = fpsText.GetComponent<FPS>().fps;
+        fps = Mathf.Round(fps * 10.0f) * 0.1f;
         stepsText.GetComponent<TMP_Text>().text = "Steps: "+steps;
         fpsText.GetComponent<TMP_Text>().text = "FPS: "+ fps;
     }
