@@ -30,16 +30,16 @@ public class Texture : MonoBehaviour
         int successorIndex;
         bool eval;
 
-        for (int x = 1; x < textureWidth-1; x++)
+        for (int x = 2; x < textureWidth - 2; x++)
         {
-            for (int y = 1; y < textureHeight-1; y++)
+            for (int y = 2; y < textureHeight - 2; y++)
             {
                 if (pixelArray[x, y] == colorNumber - 1) successorIndex = 0;
                 else successorIndex = pixelArray[x, y] + 1;
 
                 if (nh == 0) eval = vonNeumann(x, y, successorIndex, 1);
                 else eval = Moore(x, y, successorIndex, 1);
-                
+
                 if (eval)
                 //if (Moore(x, y, successorIndex, 1))
                 //if (true)
@@ -121,10 +121,10 @@ public class Texture : MonoBehaviour
         {
             for (int y = 0; y < texture.height; y++)
             {
-                if (x == 0 || y == 0 || x == textureWidth-1 || y == textureHeight-1)
+                if (x < 2 || y < 2 || x > textureWidth - 3 || y > textureHeight - 3)
                 {
                     colorIndex = -1;
-                    color = new Color32(0, 255, 0, 255);
+                    color = new Color32(0, 0, 0, 255);
                 }
                 else
                 {
@@ -140,8 +140,9 @@ public class Texture : MonoBehaviour
 
     private void SetupColors()
     {
-        switch (colorNumber) {
-            case 18: 
+        switch (colorNumber)
+        {
+            case 18:
                 colorPalette = new List<Color32>{
                 new Color32(181, 0, 0, 255), //dark red
                 new Color32(255, 0, 0, 255), //red
@@ -163,7 +164,7 @@ public class Texture : MonoBehaviour
                 new Color32(255, 0, 181, 255) //pink
                 };
                 break;
-            case 17: 
+            case 17:
                 colorPalette = new List<Color32>{
                 new Color32(181, 0, 0, 255), //dark red
                 new Color32(255, 0, 0, 255), //red
@@ -184,7 +185,7 @@ public class Texture : MonoBehaviour
                 new Color32(255, 0, 181, 255) //pink
                 };
                 break;
-            case 16: 
+            case 16:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(211, 46, 0, 255), //red - orange
@@ -204,7 +205,7 @@ public class Texture : MonoBehaviour
                 new Color32(255, 0, 181, 255) //pink
                 };
                 break;
-            case 15: 
+            case 15:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(211, 46, 0, 255), //red - orange
@@ -223,7 +224,7 @@ public class Texture : MonoBehaviour
                 new Color32(255, 0, 181, 255) //pink
                 };
                 break;
-            case 14: 
+            case 14:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(211, 46, 0, 255), //red - orange
@@ -241,7 +242,7 @@ public class Texture : MonoBehaviour
                 new Color32(255, 0, 181, 255) //pink
                 };
                 break;
-            case 13: 
+            case 13:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(211, 46, 0, 255), //red - orange
@@ -258,7 +259,7 @@ public class Texture : MonoBehaviour
                 new Color32(255, 0, 181, 255) //pink
                 };
                 break;
-            case 12: 
+            case 12:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(211, 46, 0, 255), //red - orange
@@ -274,7 +275,7 @@ public class Texture : MonoBehaviour
                 new Color32(255, 0, 181, 255) //pink
                 };
                 break;
-            case 11: 
+            case 11:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(211, 46, 0, 255), //red - orange
@@ -289,7 +290,7 @@ public class Texture : MonoBehaviour
                 new Color32(255, 0, 181, 255) //pink
                 };
                 break;
-            case 10: 
+            case 10:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(211, 46, 0, 255), //red - orange
@@ -303,7 +304,7 @@ public class Texture : MonoBehaviour
                 new Color32(255, 0, 181, 255) //pink
                 };
                 break;
-            case 9: 
+            case 9:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(255, 153, 0, 255), //orange
@@ -316,7 +317,7 @@ public class Texture : MonoBehaviour
                 new Color32(255, 0, 181, 255) //pink
                 };
                 break;
-            case 8: 
+            case 8:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(255, 153, 0, 255), //orange
@@ -328,7 +329,7 @@ public class Texture : MonoBehaviour
                 new Color32(127, 0, 255, 255), //violet
                 };
                 break;
-            case 7: 
+            case 7:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(255, 153, 0, 255), //orange
@@ -339,7 +340,7 @@ public class Texture : MonoBehaviour
                 new Color32(127, 0, 255, 255), //violet
                 };
                 break;
-            case 6: 
+            case 6:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(255, 153, 0, 255), //orange
@@ -349,7 +350,7 @@ public class Texture : MonoBehaviour
                 new Color32(127, 0, 255, 255) //violet
                 };
                 break;
-            case 5: 
+            case 5:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(255, 153, 0, 255), //orange
@@ -358,7 +359,7 @@ public class Texture : MonoBehaviour
                 new Color32(127, 0, 255, 255) //violet
                 };
                 break;
-            case 4: 
+            case 4:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(255, 255, 0, 255), //yellow
@@ -366,7 +367,7 @@ public class Texture : MonoBehaviour
                 new Color32(127, 0, 255, 255) //violet
                 };
                 break;
-            case 3: 
+            case 3:
                 colorPalette = new List<Color32>{
                 new Color32(255, 0, 0, 255), //red
                 new Color32(0, 255, 0, 255), //green
@@ -378,7 +379,7 @@ public class Texture : MonoBehaviour
                 new Color32(255, 0, 0, 255), //red
                 new Color32(0, 255, 0, 255), //green
                 };
-                break; 
+                break;
         }
     }
 }
