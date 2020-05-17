@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class Texture : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class Texture : MonoBehaviour
     private static int textureWidth = 800;
     private static int textureHeight = 600;
     private int[,] pixelArray = new int[textureWidth, textureHeight];
+    private int[,] dummy = new int[textureWidth, textureHeight];
+    private int[,] curr;
+    private int[,] next;
     private Texture2D texture;
     private int successorIndex;
     private bool eval;
@@ -26,20 +30,31 @@ public class Texture : MonoBehaviour
         RandomizeTexture();
         texture = GetComponent<RawImage>().material.mainTexture as Texture2D;
         GetComponent<Texture>().enabled = false;
-        Debug.Log(range);
-        Debug.Log(threshold);
-        Debug.Log(colorNumber);
-        Debug.Log(nh);
+        curr = pixelArray;
+        next = dummy;
+        //Array.Copy(pixelArray, dummy, textureWidth * textureHeight);
+    }
+
+    private void SwapArrays()
+    {
+        if (curr == pixelArray)
+        {
+            curr = dummy;
+            next = pixelArray;
+        }
+        else
+        {
+            curr = pixelArray;
+            next = dummy;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        //for (int x = 2; x < textureWidth - 2; x++)
-        for (int y = 2; y < textureHeight - 2; y++)
+        for (int x = 2; x < textureWidth - 2; x++)
         {
-            //for (int y = 2; y < textureHeight - 2; y++)
-            for (int x = 2; x < textureWidth - 2; x++)
+            for (int y = 2; y < textureHeight - 2; y++)
             {
                 if (pixelArray[x, y] == colorNumber - 1) successorIndex = 0;
                 else successorIndex = pixelArray[x, y] + 1;
@@ -55,6 +70,8 @@ public class Texture : MonoBehaviour
             }
         }
         texture.Apply();
+        //Array.Copy(dummy, pixelArray, textureWidth * textureHeight);
+        SwapArrays();
         steps++;
     }
 
@@ -98,7 +115,7 @@ public class Texture : MonoBehaviour
         int colorIndex;
         Color color;
 
-        Random.InitState(System.DateTime.Now.Second);
+        UnityEngine.Random.InitState(System.DateTime.Now.Second);
 
         for (int x = 0; x < texture.width; x++)
         {
@@ -111,7 +128,7 @@ public class Texture : MonoBehaviour
                 }
                 else
                 {
-                    colorIndex = Random.Range(0, colorNumber);
+                    colorIndex = UnityEngine.Random.Range(0, colorNumber);
                     color = colorPalette[colorIndex];
                 }
                 pixelArray[x, y] = colorIndex;
