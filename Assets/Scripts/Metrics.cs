@@ -10,6 +10,8 @@ public class Metrics : MonoBehaviour
     public GameObject fpsText;
     private GameObject optionsCanvas;
     private GameObject texture;
+    private int range;
+    private int threshold;
     private int colorNumber;
     private int steps;
     private string nh;
@@ -24,10 +26,12 @@ public class Metrics : MonoBehaviour
     }
 
     public void onPlay() {
+        range  = optionsCanvas.GetComponent<Options>().rangeoutput;
+        threshold  = optionsCanvas.GetComponent<Options>().thresholdoutput;
+        colorNumber = optionsCanvas.GetComponent<Options>().colorsoutput;
         if (optionsCanvas.GetComponent<Options>().nhoutput == 0) nh = "vonNeumann";
         else nh = "Moore";
-        colorNumber = optionsCanvas.GetComponent<Options>().colorsoutput;
-        rulesText.GetComponent<TMP_Text>().text = "Rule: C"+colorNumber+"/"+nh;
+        rulesText.GetComponent<TMP_Text>().text = "Rule: R"+range+"/T"+threshold+"/C"+colorNumber+"/"+nh;
     }
 
     // Update is called once per frame

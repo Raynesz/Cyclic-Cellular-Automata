@@ -11,8 +11,14 @@ public class Options : MonoBehaviour
     public GameObject playPauseButton;
     public GameObject resetButton;
     public TMP_Dropdown nhDropdown;
+    public GameObject rangeValueText;
+    public Slider rangeSlider;
+    public GameObject thresholdValueText;
+    public Slider thresholdSlider;
     public GameObject colorsValueText;
     public Slider colorsSlider;
+    public int rangeoutput;
+    public int thresholdoutput;
     public int colorsoutput;
     public int nhoutput;
     private bool changesPending = false;
@@ -22,6 +28,20 @@ public class Options : MonoBehaviour
         applyButton.GetComponent<Button>().interactable = false;
         playPauseButton.GetComponent<Button>().interactable = true;
         resetButton.GetComponent<Button>().interactable = true;
+    }
+
+    public void HandleRangeSlider()
+    {
+        changesPending = true;
+        rangeoutput = (int)rangeSlider.value;
+        rangeValueText.GetComponent<TMP_Text>().text = "" + rangeoutput;
+    }
+
+    public void HandleThresholdSlider()
+    {
+        changesPending = true;
+        thresholdoutput = (int)thresholdSlider.value;
+        thresholdValueText.GetComponent<TMP_Text>().text = "" + thresholdoutput;
     }
 
     public void HandleColorsSlider()

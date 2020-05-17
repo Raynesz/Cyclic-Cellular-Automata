@@ -6,8 +6,10 @@ using UnityEngine.UI;
 public class Texture : MonoBehaviour
 {
     public int steps = 0;
-    private int nh;
+    private int range;
+    private int threshold;
     private int colorNumber;
+    private int nh;
     private List<Color32> colorPalette = new List<Color32>();
     private static int textureWidth = 1420;
     private static int textureHeight = 800;
@@ -24,6 +26,10 @@ public class Texture : MonoBehaviour
         RandomizeTexture();
         texture = GetComponent<RawImage>().material.mainTexture as Texture2D;
         GetComponent<Texture>().enabled = false;
+        Debug.Log(range);
+        Debug.Log(threshold);
+        Debug.Log(colorNumber);
+        Debug.Log(nh);
     }
 
     // Update is called once per frame
@@ -40,8 +46,8 @@ public class Texture : MonoBehaviour
                 if (pixelArray[x, y] == colorNumber - 1) successorIndex = 0;
                 else successorIndex = pixelArray[x, y] + 1;
 
-                if (nh == 0) eval = vonNeumann(x, y, successorIndex, 3);
-                else eval = Moore(x, y, successorIndex, 3);
+                if (nh == 0) eval = vonNeumann(x, y, successorIndex);
+                else eval = Moore(x, y, successorIndex);
 
                 if (eval)
                 //if (Moore(x, y, successorIndex, 1))
@@ -56,31 +62,23 @@ public class Texture : MonoBehaviour
         steps++;
     }
 
-    private bool vonNeumann(int x, int y, int successorIndex, int thold)
+    private bool vonNeumann(int x, int y, int successorIndex)
     {
         int count = 0;
 
-        /*if (pixelArray[x, y + 1] == successorIndex || pixelArray[x + 1, y] == successorIndex || pixelArray[x, y - 1] == successorIndex || pixelArray[x - 1, y] == successorIndex)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }*/
         if (pixelArray[x, y + 1] == successorIndex) count++;
         if (pixelArray[x + 1, y] == successorIndex) count++;
         if (pixelArray[x, y - 1] == successorIndex) count++;
         if (pixelArray[x - 1, y] == successorIndex) count++;
-        if (count >= thold) return true;
+        if (count >= threshold) return true;
         else return false;
     }
 
-    private bool Moore(int x, int y, int successorIndex, int thold)
+    private bool Moore(int x, int y, int successorIndex)
     {
         int count = 0;
-        int left = -1, bottom = -1;
-        int right = 1, top = 1;
+        int left = -range, bottom = -range;
+        int right = range, top = range;
 
         for (int i = left; i <= right; i++)
         {
@@ -94,7 +92,7 @@ public class Texture : MonoBehaviour
                         else { if (pixelArray[x + i, y + j] == (pixelArray[x, y] + 1)) count+=1; }
                     }
                 }
-                if (count >= thold) return true;
+                if (count >= threshold) return true;
             }
         }
         //if (count >= thold) return true;
@@ -109,7 +107,7 @@ public class Texture : MonoBehaviour
         int colorIndex;
         Color color;
 
-        Random.InitState(System.DateTime.Now.Second);
+        //Random.InitState(System.DateTime.Now.Second);
 
         for (int x = 0; x < texture.width; x++)
         {
@@ -135,8 +133,10 @@ public class Texture : MonoBehaviour
     private void updateRule()
     {
         GameObject optionsCanvas = GameObject.Find("Options Canvas");
-        nh = optionsCanvas.GetComponent<Options>().nhoutput;
+        range = optionsCanvas.GetComponent<Options>().rangeoutput;
+        threshold = optionsCanvas.GetComponent<Options>().thresholdoutput;
         colorNumber = optionsCanvas.GetComponent<Options>().colorsoutput;
+        nh = optionsCanvas.GetComponent<Options>().nhoutput;
     }
 
     private void SetupColors()
