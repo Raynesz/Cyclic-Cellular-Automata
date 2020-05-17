@@ -29,8 +29,8 @@ public class Metrics : MonoBehaviour
         range  = optionsCanvas.GetComponent<Options>().rangeoutput;
         threshold  = optionsCanvas.GetComponent<Options>().thresholdoutput;
         colorNumber = optionsCanvas.GetComponent<Options>().colorsoutput;
-        if (optionsCanvas.GetComponent<Options>().nhoutput == 0) nh = "vonNeumann";
-        else nh = "Moore";
+        if (optionsCanvas.GetComponent<Options>().nhoutput) nh = "Moore";
+        else nh = "vonNeumann";
         rulesText.GetComponent<TMP_Text>().text = "Rule: R"+range+"/T"+threshold+"/C"+colorNumber+"/"+nh;
     }
 

@@ -20,7 +20,7 @@ public class Options : MonoBehaviour
     public int rangeoutput;
     public int thresholdoutput;
     public int colorsoutput;
-    public int nhoutput;
+    public bool nhoutput;
     private bool changesPending = false;
     // Start is called before the first frame update
     void Start()
@@ -54,10 +54,12 @@ public class Options : MonoBehaviour
     public void HandleNHInputData(int val)
     {
         changesPending = true;
-        nhoutput = val;
+        if (val == 0) nhoutput = false;
+        else nhoutput = true;
     }
 
-    public void onApply() {
+    public void onApply()
+    {
         changesPending = false;
     }
 
@@ -81,11 +83,14 @@ public class Options : MonoBehaviour
             nhDropdown.interactable = true;
         }
 
-        if (changesPending) {
+        if (changesPending)
+        {
             applyButton.GetComponent<Button>().interactable = true;
             playPauseButton.GetComponent<Button>().interactable = false;
             resetButton.GetComponent<Button>().interactable = false;
-        }else{
+        }
+        else
+        {
             applyButton.GetComponent<Button>().interactable = false;
             playPauseButton.GetComponent<Button>().interactable = true;
             resetButton.GetComponent<Button>().interactable = true;

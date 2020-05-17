@@ -10,18 +10,17 @@ public class Texture : MonoBehaviour
     private int range;
     private int threshold;
     private int colorNumber;
-    private int nh;
+    private bool nh;
     private List<Color32> colorPalette = new List<Color32>();
     private static int textureWidth = 800;
     private static int textureHeight = 600;
     private int[,] pixelArray = new int[textureWidth, textureHeight];
-    private int[,] dummy = new int[textureWidth, textureHeight];
+    private int[,] altPixelArray = new int[textureWidth, textureHeight];
     private int[,] curr;
     private int[,] next;
     private bool alter = true;
     private Texture2D texture;
     private int successorIndex;
-    private bool eval;
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +30,7 @@ public class Texture : MonoBehaviour
         RandomizeTexture();
         texture = GetComponent<RawImage>().material.mainTexture as Texture2D;
         GetComponent<Texture>().enabled = false;
-        Array.Copy(pixelArray, dummy, textureWidth * textureHeight);
+        Array.Copy(pixelArray, altPixelArray, textureWidth * textureHeight);
     }
 
     private void SetArrays()
@@ -39,11 +38,11 @@ public class Texture : MonoBehaviour
         if (alter)
         {
             curr = pixelArray;
-            next = dummy;
+            next = altPixelArray;
         }
         else
         {
-            curr = dummy;
+            curr = altPixelArray;
             next = pixelArray;
         }
         alter = !alter;
@@ -60,10 +59,7 @@ public class Texture : MonoBehaviour
                 if (curr[x, y] == colorNumber - 1) successorIndex = 0;
                 else successorIndex = curr[x, y] + 1;
 
-                if (nh == 0) eval = vonNeumann(x, y, successorIndex);
-                else eval = Moore(x, y, successorIndex);
-
-                if (eval)
+                if (NeighbourhoodAlgorithm(x, y, successorIndex))
                 {
                     next[x, y] = successorIndex;
                     texture.SetPixel(x, y, colorPalette[curr[x, y]]);
@@ -74,19 +70,7 @@ public class Texture : MonoBehaviour
         steps++;
     }
 
-    private bool vonNeumann(int x, int y, int successorIndex)
-    {
-        int count = 0;
-
-        if (curr[x, y + 1] == successorIndex) count++;
-        if (curr[x + 1, y] == successorIndex) count++;
-        if (curr[x, y - 1] == successorIndex) count++;
-        if (curr[x - 1, y] == successorIndex) count++;
-        if (count >= threshold) return true;
-        else return false;
-    }
-
-    private bool Moore(int x, int y, int successorIndex)
+    private bool NeighbourhoodAlgorithm(int x, int y, int successorIndex)
     {
         int count = 0;
 
@@ -94,13 +78,13 @@ public class Texture : MonoBehaviour
         {
             for (int j = -range; j <= range; j++)
             {
-                if (((x + i) >= 0 && (x + i) <= textureWidth - 1) && ((y + j) >= 0 && (y + j) <= textureHeight - 1))
+                if ((nh) || (Math.Abs(i) + Math.Abs(j) <= range))
                 {
-                    if (curr[x + i, y + j] == successorIndex) count++;
-                }
-                if (count >= threshold)
-                {
-                    return true;
+                    if (((x + i) >= 0 && (x + i) <= textureWidth - 1) && ((y + j) >= 0 && (y + j) <= textureHeight - 1))
+                    {
+                        if (curr[x + i, y + j] == successorIndex) count++;
+                    }
+                    if (count >= threshold) return true;
                 }
             }
         }
