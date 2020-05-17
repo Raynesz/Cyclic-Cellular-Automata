@@ -77,8 +77,10 @@ public class Texture : MonoBehaviour
     private bool Moore(int x, int y, int successorIndex)
     {
         int count = 0;
-        int left = -range, bottom = -range;
-        int right = range, top = range;
+        //int left = -range, bottom = -range;
+        //int right = range, top = range;
+        int left = -1, bottom = -1;
+        int right = 1, top = 1;
 
         for (int i = left; i <= right; i++)
         {
@@ -88,11 +90,11 @@ public class Texture : MonoBehaviour
                 {
                     if (((x + i) >= 0 && (x + i) <= textureWidth - 1) && ((y + j) >= 0 && (y + j) <= textureHeight - 1))
                     {
-                        if (pixelArray[x, y] == colorNumber - 1) { if (pixelArray[x + i, y + j] == 0) count+=1; }
-                        else { if (pixelArray[x + i, y + j] == (pixelArray[x, y] + 1)) count+=1; }
+                        if (pixelArray[x, y] == colorNumber - 1) { if (pixelArray[x + i, y + j] == 0) count=count+1; }
+                        else { if (pixelArray[x + i, y + j] == (pixelArray[x, y] + 1)) count=count+1; }
                     }
                 }
-                if (count >= threshold) return true;
+                if (count >= 1) return true;
             }
         }
         //if (count >= thold) return true;
