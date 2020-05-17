@@ -18,6 +18,7 @@ public class Texture : MonoBehaviour
     private int[,] dummy = new int[textureWidth, textureHeight];
     private int[,] curr;
     private int[,] next;
+    private bool alter = true;
     private Texture2D texture;
     private int successorIndex;
     private bool eval;
@@ -30,48 +31,46 @@ public class Texture : MonoBehaviour
         RandomizeTexture();
         texture = GetComponent<RawImage>().material.mainTexture as Texture2D;
         GetComponent<Texture>().enabled = false;
-        curr = pixelArray;
-        next = dummy;
-        //Array.Copy(pixelArray, dummy, textureWidth * textureHeight);
+        Array.Copy(pixelArray, dummy, textureWidth * textureHeight);
     }
 
-    private void SwapArrays()
+    private void SetArrays()
     {
-        if (curr == pixelArray)
-        {
-            curr = dummy;
-            next = pixelArray;
-        }
-        else
+        if (alter)
         {
             curr = pixelArray;
             next = dummy;
         }
+        else
+        {
+            curr = dummy;
+            next = pixelArray;
+        }
+        alter = !alter;
     }
 
     // Update is called once per frame
     void Update()
     {
+        SetArrays();
         for (int x = 2; x < textureWidth - 2; x++)
         {
             for (int y = 2; y < textureHeight - 2; y++)
             {
-                if (pixelArray[x, y] == colorNumber - 1) successorIndex = 0;
-                else successorIndex = pixelArray[x, y] + 1;
+                if (curr[x, y] == colorNumber - 1) successorIndex = 0;
+                else successorIndex = curr[x, y] + 1;
 
                 if (nh == 0) eval = vonNeumann(x, y, successorIndex);
                 else eval = Moore(x, y, successorIndex);
 
                 if (eval)
                 {
-                    pixelArray[x, y] = successorIndex;
-                    texture.SetPixel(x, y, colorPalette[pixelArray[x, y]]);
+                    next[x, y] = successorIndex;
+                    texture.SetPixel(x, y, colorPalette[curr[x, y]]);
                 }
             }
         }
         texture.Apply();
-        //Array.Copy(dummy, pixelArray, textureWidth * textureHeight);
-        SwapArrays();
         steps++;
     }
 
@@ -79,10 +78,10 @@ public class Texture : MonoBehaviour
     {
         int count = 0;
 
-        if (pixelArray[x, y + 1] == successorIndex) count++;
-        if (pixelArray[x + 1, y] == successorIndex) count++;
-        if (pixelArray[x, y - 1] == successorIndex) count++;
-        if (pixelArray[x - 1, y] == successorIndex) count++;
+        if (curr[x, y + 1] == successorIndex) count++;
+        if (curr[x + 1, y] == successorIndex) count++;
+        if (curr[x, y - 1] == successorIndex) count++;
+        if (curr[x - 1, y] == successorIndex) count++;
         if (count >= threshold) return true;
         else return false;
     }
@@ -97,7 +96,7 @@ public class Texture : MonoBehaviour
             {
                 if (((x + i) >= 0 && (x + i) <= textureWidth - 1) && ((y + j) >= 0 && (y + j) <= textureHeight - 1))
                 {
-                    if (pixelArray[x + i, y + j] == successorIndex) count++;
+                    if (curr[x + i, y + j] == successorIndex) count++;
                 }
                 if (count >= threshold)
                 {
