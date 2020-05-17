@@ -11,8 +11,8 @@ public class Texture : MonoBehaviour
     private int colorNumber;
     private int nh;
     private List<Color32> colorPalette = new List<Color32>();
-    private static int textureWidth = 1420;
-    private static int textureHeight = 800;
+    private static int textureWidth = 800;
+    private static int textureHeight = 600;
     private int[,] pixelArray = new int[textureWidth, textureHeight];
     private Texture2D texture;
     private int successorIndex;
@@ -35,13 +35,11 @@ public class Texture : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Texture2D texture = GetComponent<RawImage>().material.mainTexture as Texture2D;
-        //int successorIndex;
-        //bool eval;
-
-        for (int x = 2; x < textureWidth - 2; x++)
+        //for (int x = 2; x < textureWidth - 2; x++)
+        for (int y = 2; y < textureHeight - 2; y++)
         {
-            for (int y = 2; y < textureHeight - 2; y++)
+            //for (int y = 2; y < textureHeight - 2; y++)
+            for (int x = 2; x < textureWidth - 2; x++)
             {
                 if (pixelArray[x, y] == colorNumber - 1) successorIndex = 0;
                 else successorIndex = pixelArray[x, y] + 1;
@@ -50,8 +48,6 @@ public class Texture : MonoBehaviour
                 else eval = Moore(x, y, successorIndex);
 
                 if (eval)
-                //if (Moore(x, y, successorIndex, 1))
-                //if (true)
                 {
                     pixelArray[x, y] = successorIndex;
                     texture.SetPixel(x, y, colorPalette[pixelArray[x, y]]);
@@ -77,28 +73,21 @@ public class Texture : MonoBehaviour
     private bool Moore(int x, int y, int successorIndex)
     {
         int count = 0;
-        //int left = -range, bottom = -range;
-        //int right = range, top = range;
-        int left = -1, bottom = -1;
-        int right = 1, top = 1;
 
-        for (int i = left; i <= right; i++)
+        for (int i = -range; i <= range; i++)
         {
-            for (int j = bottom; j <= top; j++)
+            for (int j = -range; j <= range; j++)
             {
-                if (!(i == 0) && (j == 0))
+                if (((x + i) >= 0 && (x + i) <= textureWidth - 1) && ((y + j) >= 0 && (y + j) <= textureHeight - 1))
                 {
-                    if (((x + i) >= 0 && (x + i) <= textureWidth - 1) && ((y + j) >= 0 && (y + j) <= textureHeight - 1))
-                    {
-                        if (pixelArray[x, y] == colorNumber - 1) { if (pixelArray[x + i, y + j] == 0) count=count+1; }
-                        else { if (pixelArray[x + i, y + j] == (pixelArray[x, y] + 1)) count=count+1; }
-                    }
+                    if (pixelArray[x + i, y + j] == successorIndex) count++;
                 }
-                if (count >= 1) return true;
+                if (count >= threshold)
+                {
+                    return true;
+                }
             }
         }
-        //if (count >= thold) return true;
-        //else return false;
         return false;
     }
 
@@ -109,7 +98,7 @@ public class Texture : MonoBehaviour
         int colorIndex;
         Color color;
 
-        //Random.InitState(System.DateTime.Now.Second);
+        Random.InitState(System.DateTime.Now.Second);
 
         for (int x = 0; x < texture.width; x++)
         {

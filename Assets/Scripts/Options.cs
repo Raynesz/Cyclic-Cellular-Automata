@@ -67,12 +67,16 @@ public class Options : MonoBehaviour
         if (texture.GetComponent<Texture>().enabled)
         {
             playPauseTMP.GetComponent<TMP_Text>().text = "Pause";
+            rangeSlider.interactable = false;
+            thresholdSlider.interactable = false;
             colorsSlider.interactable = false;
             nhDropdown.interactable = false;
         }
         else
         {
             playPauseTMP.GetComponent<TMP_Text>().text = "Play";
+            rangeSlider.interactable = true;
+            thresholdSlider.interactable = true;
             colorsSlider.interactable = true;
             nhDropdown.interactable = true;
         }
