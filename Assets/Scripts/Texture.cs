@@ -12,8 +12,15 @@ public class Texture : MonoBehaviour
     private int colorNumber;
     private bool nh;
     private List<Color32> colorPalette = new List<Color32>();
-    private static int textureWidth = 800;
-    private static int textureHeight = 600;
+    private static int xmargin = 15;
+    private static int ymargin = 15;
+    private static int border = 5;
+    private static int textureWidth = 550 + (2*xmargin);
+    private static int textureHeight = 550 + (2*ymargin);
+    private static int xStartIndex = xmargin + border;
+    private static int xEndIndex = textureWidth - xmargin - border;
+    private static int yStartIndex = ymargin + border;
+    private static int yEndIndex = textureHeight - ymargin - border;
     private int[,] pixelArray = new int[textureWidth, textureHeight];
     private int[,] altPixelArray = new int[textureWidth, textureHeight];
     private int[,] curr;
@@ -52,9 +59,9 @@ public class Texture : MonoBehaviour
     void Update()
     {
         SetArrays();
-        for (int x = 2; x < textureWidth - 2; x++)
+        for (int x = xStartIndex; x < xEndIndex; x++)
         {
-            for (int y = 2; y < textureHeight - 2; y++)
+            for (int y = yStartIndex; y < yEndIndex; y++)
             {
                 if (curr[x, y] == colorNumber - 1) successorIndex = 0;
                 else successorIndex = curr[x, y] + 1;
@@ -78,12 +85,12 @@ public class Texture : MonoBehaviour
         {
             for (int j = -range; j <= range; j++)
             {
-                if ((nh) || (Math.Abs(i) + Math.Abs(j) <= range))
+                if (nh || ((Math.Abs(i) + Math.Abs(j)) <= range))
                 {
-                    if (((x + i) >= 0 && (x + i) <= textureWidth - 1) && ((y + j) >= 0 && (y + j) <= textureHeight - 1))
-                    {
+                    //if (((x + i) >= 0 && (x + i) <= textureWidth - 1) && ((y + j) >= 0 && (y + j) <= textureHeight - 1))
+                    //{
                         if (curr[x + i, y + j] == successorIndex) count++;
-                    }
+                    //}
                     if (count >= threshold) return true;
                 }
             }
@@ -104,8 +111,12 @@ public class Texture : MonoBehaviour
         {
             for (int y = 0; y < texture.height; y++)
             {
-                if (x < 2 || y < 2 || x > textureWidth - 3 || y > textureHeight - 3)
+                if (x < xmargin || y < ymargin || x >= (textureWidth - xmargin) || y >= (textureHeight - ymargin))
                 {
+                    colorIndex = -2;
+                    color = new Color32(42, 69, 103, 255);
+                }
+                else if (x < xStartIndex || y < yStartIndex || x >= xEndIndex || y >= yEndIndex) {
                     colorIndex = -1;
                     color = new Color32(255, 255, 255, 255);
                 }

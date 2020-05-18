@@ -13,7 +13,7 @@ public class Metrics : MonoBehaviour
     private int range;
     private int threshold;
     private int colorNumber;
-    private int steps;
+    private int steps = 0;
     private string nh;
     private float fps;
     // Start is called before the first frame update
@@ -21,7 +21,7 @@ public class Metrics : MonoBehaviour
     {
         optionsCanvas = GameObject.Find("Options Canvas");
         rulesText.GetComponent<TMP_Text>().text = "Rule: ";
-        stepsText.GetComponent<TMP_Text>().text = "Steps: 0";
+        stepsText.GetComponent<TMP_Text>().text = "Steps: ";
         fpsText.GetComponent<TMP_Text>().text = "FPS: ";
     }
 
