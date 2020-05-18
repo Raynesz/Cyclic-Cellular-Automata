@@ -11,12 +11,13 @@ public class Texture : MonoBehaviour
     private int threshold;
     private int colorNumber;
     private bool nh;
-    private List<Color32> colorPalette = new List<Color32>();
+    //private List<Color32> colorPalette = new List<Color32>();
+    private List<Color32> colorPalette;
     private static int xmargin = 15;
     private static int ymargin = 15;
     private static int border = 5;
-    private static int textureWidth = 550 + (2*xmargin);
-    private static int textureHeight = 550 + (2*ymargin);
+    private static int textureWidth = 550 + (2 * xmargin);
+    private static int textureHeight = 550 + (2 * ymargin);
     private static int xStartIndex = xmargin + border;
     private static int xEndIndex = textureWidth - xmargin - border;
     private static int yStartIndex = ymargin + border;
@@ -29,16 +30,25 @@ public class Texture : MonoBehaviour
     private Texture2D texture;
     private int successorIndex;
 
+    void Awake() {
+        updateRule();
+        SetupColors();
+        RandomizeTexture();
+        texture = GetComponent<RawImage>().material.mainTexture as Texture2D;
+        Array.Copy(pixelArray, altPixelArray, textureWidth * textureHeight);
+        GetComponent<Texture>().enabled = false;
+    }
+
     // Start is called before the first frame update
-    void Start()
+    /*void Start()
     {
         updateRule();
         SetupColors();
         RandomizeTexture();
         texture = GetComponent<RawImage>().material.mainTexture as Texture2D;
-        GetComponent<Texture>().enabled = false;
         Array.Copy(pixelArray, altPixelArray, textureWidth * textureHeight);
-    }
+        GetComponent<Texture>().enabled = false;
+    }*/
 
     private void SetArrays()
     {
@@ -74,6 +84,7 @@ public class Texture : MonoBehaviour
             }
         }
         texture.Apply();
+        Debug.Log("ran");
         steps++;
     }
 
@@ -89,7 +100,7 @@ public class Texture : MonoBehaviour
                 {
                     //if (((x + i) >= 0 && (x + i) <= textureWidth - 1) && ((y + j) >= 0 && (y + j) <= textureHeight - 1))
                     //{
-                        if (curr[x + i, y + j] == successorIndex) count++;
+                    if (curr[x + i, y + j] == successorIndex) count++;
                     //}
                     if (count >= threshold) return true;
                 }
@@ -116,7 +127,8 @@ public class Texture : MonoBehaviour
                     colorIndex = -2;
                     color = new Color32(42, 69, 103, 255);
                 }
-                else if (x < xStartIndex || y < yStartIndex || x >= xEndIndex || y >= yEndIndex) {
+                else if (x < xStartIndex || y < yStartIndex || x >= xEndIndex || y >= yEndIndex)
+                {
                     colorIndex = -1;
                     color = new Color32(255, 255, 255, 255);
                 }
