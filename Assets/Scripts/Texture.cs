@@ -84,7 +84,7 @@ public class Texture : MonoBehaviour
             }
         }
         texture.Apply();
-        Debug.Log("ran");
+        //Debug.Log("ran");
         steps++;
     }
 
