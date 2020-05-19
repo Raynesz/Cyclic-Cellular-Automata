@@ -125,7 +125,7 @@ public class Texture : MonoBehaviour
                 if (x < xmargin || y < ymargin || x >= (textureWidth - xmargin) || y >= (textureHeight - ymargin))
                 {
                     colorIndex = -2;
-                    color = new Color32(42, 69, 103, 255);
+                    color = new Color32(0, 0, 0, 70);
                 }
                 else if (x < xStartIndex || y < yStartIndex || x >= xEndIndex || y >= yEndIndex)
                 {
