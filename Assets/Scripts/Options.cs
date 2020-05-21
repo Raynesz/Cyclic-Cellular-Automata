@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -22,7 +20,7 @@ public class Options : MonoBehaviour
     public int colorsoutput;
     public bool nhoutput;
     private bool changesPending = false;
-    // Start is called before the first frame update
+
     void Start()
     {
         applyButton.GetComponent<Button>().interactable = false;

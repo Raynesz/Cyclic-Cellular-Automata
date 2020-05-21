@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
@@ -11,7 +10,6 @@ public class Texture : MonoBehaviour
     private int threshold;
     private int colorNumber;
     private bool nh;
-    //private List<Color32> colorPalette = new List<Color32>();
     private List<Color32> colorPalette;
     private static int xmargin = 15;
     private static int ymargin = 15;
@@ -22,33 +20,23 @@ public class Texture : MonoBehaviour
     private static int xEndIndex = textureWidth - xmargin - border;
     private static int yStartIndex = ymargin + border;
     private static int yEndIndex = textureHeight - ymargin - border;
-    private int[,] pixelArray = new int[textureWidth, textureHeight];
-    private int[,] altPixelArray = new int[textureWidth, textureHeight];
+    private int[,] pixelArray = new int[textureWidth, textureHeight];   // using 2 arrays, one to read from...
+    private int[,] altPixelArray = new int[textureWidth, textureHeight];    // ... and one to write to, for use in th next loop
     private int[,] curr;
     private int[,] next;
     private bool alter = true;
     private Texture2D texture;
     private int successorIndex;
 
-    void Awake() {
-        updateRule();
-        SetupColors();
-        RandomizeTexture();
-        texture = GetComponent<RawImage>().material.mainTexture as Texture2D;
-        Array.Copy(pixelArray, altPixelArray, textureWidth * textureHeight);
-        GetComponent<Texture>().enabled = false;
-    }
-
-    // Start is called before the first frame update
-    /*void Start()
+    void Awake()
     {
-        updateRule();
-        SetupColors();
-        RandomizeTexture();
-        texture = GetComponent<RawImage>().material.mainTexture as Texture2D;
-        Array.Copy(pixelArray, altPixelArray, textureWidth * textureHeight);
-        GetComponent<Texture>().enabled = false;
-    }*/
+        updateRule();   // pass the GUI inputs (R/T/C/NH) to the generator
+        SetupColors();  // the color palette is set based upon the number of states selected by the user
+        RandomizeTexture(); // creates the initial grid of cells randomly
+        texture = GetComponent<RawImage>().material.mainTexture as Texture2D;   // get reference to the texture we ll be using
+        Array.Copy(pixelArray, altPixelArray, textureWidth * textureHeight);    // copy the values of the array to its clone
+        GetComponent<Texture>().enabled = false;    // script is disabled so that it doesnt start updating unless the user presses the Play Button
+    }
 
     private void SetArrays()
     {
@@ -65,26 +53,24 @@ public class Texture : MonoBehaviour
         alter = !alter;
     }
 
-    // Update is called once per frame
-    void Update()
+    void Update() // MAIN LOOP
     {
-        SetArrays();
+        SetArrays();    // alternate using the 2 arrays for reading and writing
         for (int x = xStartIndex; x < xEndIndex; x++)
-        {
+        {                                                   // for every cell (pixel) in the grid
             for (int y = yStartIndex; y < yEndIndex; y++)
             {
                 if (curr[x, y] == colorNumber - 1) successorIndex = 0;
-                else successorIndex = curr[x, y] + 1;
+                else successorIndex = curr[x, y] + 1;                   // decide which the successor state is
 
-                if (NeighbourhoodAlgorithm(x, y, successorIndex))
+                if (NeighbourhoodAlgorithm(x, y, successorIndex))   // check whether there are enough neighbours around
                 {
                     next[x, y] = successorIndex;
-                    texture.SetPixel(x, y, colorPalette[curr[x, y]]);
+                    texture.SetPixel(x, y, colorPalette[curr[x, y]]);   // set the new value if yes
                 }
             }
         }
         texture.Apply();
-        //Debug.Log("ran");
         steps++;
     }
 
@@ -93,16 +79,13 @@ public class Texture : MonoBehaviour
         int count = 0;
 
         for (int i = -range; i <= range; i++)
-        {
+        {                                           // check every cell around the current, in a range-sided square
             for (int j = -range; j <= range; j++)
             {
-                if (nh || ((Math.Abs(i) + Math.Abs(j)) <= range))
-                {
-                    //if (((x + i) >= 0 && (x + i) <= textureWidth - 1) && ((y + j) >= 0 && (y + j) <= textureHeight - 1))
-                    //{
-                    if (curr[x + i, y + j] == successorIndex) count++;
-                    //}
-                    if (count >= threshold) return true;
+                if (nh || ((Math.Abs(i) + Math.Abs(j)) <= range))   // if Moore is used (nh=true) then go ahead and check every cell in the square grid...
+                {                                                   // ... if not then check if the vonNeumann distance is within range
+                    if (curr[x + i, y + j] == successorIndex) count++; // increase the total count of successor neighbours
+                    if (count >= threshold) return true;    // return true if the count surpasses the threshold
                 }
             }
         }
@@ -116,7 +99,11 @@ public class Texture : MonoBehaviour
         int colorIndex;
         Color color;
 
-        UnityEngine.Random.InitState(System.DateTime.Now.Second);
+        int second = System.DateTime.Now.Second;    // random initial grid is based upon the second and millisecond...
+        int millisecond = System.DateTime.Now.Millisecond;  // ... at the time of its call
+        int sms = int.Parse(second.ToString() + millisecond.ToString());
+
+        UnityEngine.Random.InitState(sms);
 
         for (int x = 0; x < texture.width; x++)
         {
@@ -125,16 +112,16 @@ public class Texture : MonoBehaviour
                 if (x < xmargin || y < ymargin || x >= (textureWidth - xmargin) || y >= (textureHeight - ymargin))
                 {
                     colorIndex = -2;
-                    color = new Color32(0, 0, 0, 70);
+                    color = new Color32(0, 0, 0, 70);       // color of the semitransparent part of the frame
                 }
                 else if (x < xStartIndex || y < yStartIndex || x >= xEndIndex || y >= yEndIndex)
                 {
                     colorIndex = -1;
-                    color = new Color32(255, 255, 255, 255);
+                    color = new Color32(255, 255, 255, 255);    // white color of the frame
                 }
                 else
                 {
-                    colorIndex = UnityEngine.Random.Range(0, colorNumber);
+                    colorIndex = UnityEngine.Random.Range(0, colorNumber);  // everything else set randomly
                     color = colorPalette[colorIndex];
                 }
                 pixelArray[x, y] = colorIndex;
@@ -153,8 +140,8 @@ public class Texture : MonoBehaviour
         nh = optionsCanvas.GetComponent<Options>().nhoutput;
     }
 
-    private void SetupColors()
-    {
+    private void SetupColors()  // i wanted each number of states to have a specific color palette...
+    {                           // so i hardcoded for every single case
         switch (colorNumber)
         {
             case 18:

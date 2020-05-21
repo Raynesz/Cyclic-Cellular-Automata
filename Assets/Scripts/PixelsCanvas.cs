@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PixelsCanvas : MonoBehaviour
 {
@@ -8,7 +6,6 @@ public class PixelsCanvas : MonoBehaviour
     public GameObject pixelsPrefab;
     private GameObject pixels;
 
-    // Start is called before the first frame update
     void Start()
     {
         CreatePixels();
@@ -18,8 +15,6 @@ public class PixelsCanvas : MonoBehaviour
     {
         pixels = Instantiate(pixelsPrefab);
         pixels.transform.SetParent(pixelsCanvas.transform, false);
-        //pixels.GetComponent<RectTransform>().offsetMin = new Vector2(500, 0);
-        //pixels.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
     }
 
     public void DestroyPixels()

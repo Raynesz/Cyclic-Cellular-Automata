@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FPS : MonoBehaviour
 {
@@ -11,7 +9,7 @@ public class FPS : MonoBehaviour
     void Update()
     {
         dt += Time.unscaledDeltaTime;
-        if (dt > 1.0 / updateRateSeconds)
+        if (dt > 1.0 / updateRateSeconds) // fps will only be calculated a few times every second
         {
             fps = 1.0f / Time.unscaledDeltaTime;
             dt -= 1.0F / updateRateSeconds;
