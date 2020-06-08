@@ -14,9 +14,9 @@ public class Texture : MonoBehaviour
     private static int xmargin = 15;
     private static int ymargin = 15;
     private static int border = 5;
-    private static int textureWidth = 550 + (2 * xmargin);
-    private static int textureHeight = 550 + (2 * ymargin);
-    private static int xStartIndex = xmargin + border;
+    private static int textureWidth = 540 + (2 * xmargin) + (2 * border);
+    private static int textureHeight = 540 + (2 * ymargin) + (2 * border);
+    private static int xStartIndex = xmargin + border; // starting and ending iteration after and before the borders
     private static int xEndIndex = textureWidth - xmargin - border;
     private static int yStartIndex = ymargin + border;
     private static int yEndIndex = textureHeight - ymargin - border;
@@ -63,7 +63,7 @@ public class Texture : MonoBehaviour
                 if (curr[x, y] == colorNumber - 1) successorIndex = 0;
                 else successorIndex = curr[x, y] + 1;                   // decide which the successor state is
 
-                if (NeighbourhoodAlgorithm(x, y, successorIndex))   // check whether there are enough neighbours around
+                if (NeighbourhoodAlgorithm(x, y, successorIndex))   // check whether there are enough neighbours with the successor state around
                 {
                     next[x, y] = successorIndex;
                     texture.SetPixel(x, y, colorPalette[curr[x, y]]);   // set the new value if yes
